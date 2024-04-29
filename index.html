@@ -5,6 +5,7 @@
     <title>RSPPHD - Spatial Selectivity</title>
     <style>
         body {
+            margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
@@ -12,13 +13,12 @@
             align-items: center;
             background-color: #333;
             font-family: Arial, sans-serif;
-            /* Improved font */
         }
 
         .title {
             color: #eee;
             margin: 20px;
-            font-size: 30px;
+            font-size: 25px;
             font-weight: 600;
             white-space: nowrap;
         }
@@ -45,30 +45,27 @@
             cursor: pointer;
             padding: 15px 24px;
             transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            font-size: 25px;
+            font-size: 20px;
             font-weight: 600;
             border-radius: 15px;
             color: #202020;
-            /* Make the button text stand out */
         }
 
         .button:hover {
             background-color: #555555;
             color: #999;
             transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            /* Change text color on hover for better contrast */
         }
 
         .button.active {
             background-color: #777;
             color: #eee;
-            /* Change text color on active tab for better contrast */
         }
 
         .tabcontent {
+            display: none;
             padding: 5px;
             width: 95%;
-            justify-content: center;
         }
 
         video {
@@ -77,12 +74,13 @@
             height: 100%;
             max-height: 70vh;
             display: flex;
-            border-radius:15px;
+            border-radius: 15px;
             overflow: hidden;
         }
-        
+
         /* Responsive adjustments for smaller screens, if needed */
         @media screen and (max-width: 800px) {
+
             .video-container,
             video {
                 width: 100%;
@@ -110,35 +108,6 @@
             }
         }
 
-        @media screen and (min-width: 1300px) {
-
-            .video-container,
-            video {
-                width: 100%;
-                max-width: 100vw;
-                max-height: 70%;
-                border-radius: 20px;
-            }
-
-            .button {
-                padding: 20px 32px;
-                font-size: 35px;
-                border-radius: 20px;
-            }
-
-            .title {
-                font-size: 40px;
-            }
-
-            .tab {
-                border-radius: 20px;
-            }
-
-            .speed {
-                border-radius: 20px;
-            }
-        }
-
     </style>
 </head>
 
@@ -151,21 +120,21 @@
         <button class="tablinks button" onclick="openVideo(event, 'Video3')">Lateral Target</button>
     </div>
 
-    
+
     <div id="Video1" class="tabcontent">
         <video controls loop muted playsinline>
             <source src="Cloud_1200.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
-    
+
     <div id="Video2" class="tabcontent">
         <video controls loop muted playsinline>
             <source src="Central_1200.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
-    
+
     <div id="Video3" class="tabcontent">
         <video controls loop muted playsinline>
             <source src="Lateral_1200.mp4" type="video/mp4">
@@ -191,7 +160,7 @@
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-            document.getElementById(videoName).style.display = "block";
+            document.getElementById(videoName).style.display = "flex";
             evt.currentTarget.className += " active";
             document.getElementById(videoName).querySelector("video").play(); // Autoplay the video in the active tab
         }
@@ -212,18 +181,18 @@
             var i, speedlinks, tabcontent, video;
             speedlinks = document.getElementsByClassName("speedlinks");
             tabcontent = document.getElementsByClassName("tabcontent");
-        
+
             // Remove active class from all speed buttons
             for (i = 0; i < speedlinks.length; i++) {
                 speedlinks[i].className = speedlinks[i].className.replace(" active", "");
             }
-        
+
             // Add active class to the clicked speed button
             event.currentTarget.className += " active";
-        
+
             // Set the playback speed for the currently visible video
             for (i = 0; i < tabcontent.length; i++) {
-                if (tabcontent[i].style.display === "block") {
+                if (tabcontent[i].style.display === "flex") {
                     video = tabcontent[i].querySelector("video");
                     video.playbackRate = speed;
                 }
