@@ -167,7 +167,7 @@
             evt.currentTarget.className += " active";
             document.getElementById(videoName).querySelector("video").play(); // Autoplay the video in the active tab
         }
-
+    
         // Change tab on swipe
         function changeTab(direction) {
             var tabs = Array.from(document.getElementsByClassName('tablinks'));
@@ -178,21 +178,21 @@
                 tabs[activeTab - 1].click();
             }
         }
-
+    
         // Set playback speed
-        function setSpeed(speed) {
+        function setSpeed(speed, event) {
             var i, speedlinks, tabcontent, video;
             speedlinks = document.getElementsByClassName("speedlinks");
             tabcontent = document.getElementsByClassName("tabcontent");
-
+    
             // Remove active class from all speed buttons
             for (i = 0; i < speedlinks.length; i++) {
                 speedlinks[i].className = speedlinks[i].className.replace(" active", "");
             }
-
+    
             // Add active class to the clicked speed button
             event.currentTarget.className += " active";
-
+    
             // Set the playback speed for the currently visible video
             for (i = 0; i < tabcontent.length; i++) {
                 if (tabcontent[i].style.display === "flex") {
@@ -201,73 +201,105 @@
                 }
             }
         }
-
-        // Add event listeners for touch events
+    
         document.addEventListener('DOMContentLoaded', function () {
             var touchstartX = 0;
             var touchendX = 0;
-
+            var tapTimer;
             const slider = document.querySelector('body');
-
+    
             function handleGesture() {
                 if (touchendX + 100 > touchstartX) {
                     changeTab('next');
                 }
-
                 if (touchendX - 100 < touchstartX) {
                     changeTab('prev');
                 }
             }
-
+    
             slider.addEventListener('touchstart', function (event) {
                 touchstartX = event.changedTouches[0].screenX;
             }, false);
-
+    
             slider.addEventListener('touchend', function (event) {
                 touchendX = event.changedTouches[0].screenX;
                 handleGesture();
             }, false);
-
-            // Click the first tab by default
+    
+            // Initialize the first tab and speed button
             document.querySelector('.tablinks').click();
-
-            // Click the first speed button by default
+            // select full speed by default            
             document.querySelector('.speedlinks').click();
-
-            // Video play/pause toggle functionality
+    
+            // Improved touch handling for video play/pause and fullscreen toggle
             document.querySelectorAll('video').forEach(function(video) {
+                video.addEventListener('touchend', function(event) {
+                    event.preventDefault();
+                    if (!tapTimer) {
+                        tapTimer = setTimeout(function() {
+                            tapTimer = null;
+                            if (video.paused || video.ended) {
+                                video.play();
+                            } else {
+                                video.pause();
+                            }
+                        }, 200); // Delay to differentiate single tap from double tap
+                    } else {
+                        clearTimeout(tapTimer);
+                        tapTimer = null;
+                        if (!document.fullscreenElement) {
+                            if (video.requestFullscreen) {
+                                video.requestFullscreen();
+                            } else if (video.webkitRequestFullscreen) {
+                                video.webkitRequestFullscreen();
+                            } else if (video.msRequestFullscreen) {
+                                video.msRequestFullscreen();
+                            }
+                        } else {
+                            if (document.exitFullscreen) {
+                                document.exitFullscreen();
+                            } else if (document.webkitExitFullscreen) {
+                                document.webkitExitFullscreen();
+                            } else if (document.msExitFullscreen) {
+                                document.msExitFullscreen();
+                            }
+                        }
+                    }
+                });
+    
+                // Allow for mouse click play/pause toggle
                 video.addEventListener('click', function() {
-                    // Toggle play/pause on click
                     if (video.paused || video.ended) {
                         video.play();
                     } else {
                         video.pause();
                     }
                 });
-        // Toggle fullscreen on double-click
-        video.addEventListener('dblclick', function() {
-            if (!document.fullscreenElement) {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) {
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
+    
+                // Allow for double-click fullscreen toggle on desktop
+                video.addEventListener('dblclick', function() {
+                    if (!document.fullscreenElement) {
+                        if (video.requestFullscreen) {
+                            video.requestFullscreen();
+                        } else if (video.webkitRequestFullscreen) {
+                            video.webkitRequestFullscreen();
+                        } else if (video.msRequestFullscreen) {
+                            video.msRequestFullscreen();
+                        }
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    }
+                });
+            });
         });
-    });
-});
-
     </script>
+    
 
 </body>
 
