@@ -104,10 +104,6 @@
       <source src="Cloud_1200.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <select id="playbackRate1" onchange="changePlaybackSpeed('video1', 'playbackRate1')">
-        <option value="0.25">0.25x</option>
-        <option value="1" selected>1x</option>
-      </select>
   </div>
 
   <div id="Video2" class="tabcontent">
@@ -125,11 +121,6 @@
   </div>
 
   <script>
-    function changePlaybackSpeed(videoId, selectId) {
-        var video = document.getElementById(videoId);
-        var playbackRate = document.getElementById(selectId).value;
-        video.playbackRate = playbackRate;
-      }
     function openVideo(evt, videoName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
