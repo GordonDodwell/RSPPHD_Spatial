@@ -217,11 +217,11 @@
             const slider = document.querySelector('body'); // Change this selector to your swipeable area
 
             function handleGesture() {
-                if (touchendX + 100 < touchstartX) {
+                if (touchendX + 100 > touchstartX) {
                     changeTab('next');
                 }
 
-                if (touchendX - 100 > touchstartX) {
+                if (touchendX - 100 < touchstartX) {
                     changeTab('prev');
                 }
             }
