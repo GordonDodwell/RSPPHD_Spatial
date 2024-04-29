@@ -21,6 +21,7 @@
             font-size: 25px;
             font-weight: 600;
             white-space: nowrap;
+            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .tab {
@@ -76,6 +77,8 @@
             display: flex;
             border-radius: 15px;
             overflow: hidden;
+            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            cursor: pointer;
         }
 
         /* Responsive adjustments for smaller screens, if needed */
@@ -122,21 +125,21 @@
 
 
     <div id="Video1" class="tabcontent">
-        <video controls loop muted playsinline>
+        <video loop muted playsinline>
             <source src="Cloud_1200.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
 
     <div id="Video2" class="tabcontent">
-        <video controls loop muted playsinline>
+        <video loop muted playsinline>
             <source src="Central_1200.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
 
     <div id="Video3" class="tabcontent">
-        <video controls loop muted playsinline>
+        <video loop muted playsinline>
             <source src="Lateral_1200.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -224,17 +227,45 @@
                 touchendX = event.changedTouches[0].screenX;
                 handleGesture();
             }, false);
-        });
 
-        // Open the first tab by default
-        document.addEventListener("DOMContentLoaded", function () {
+            // Click the first tab by default
             document.querySelector('.tablinks').click();
-        });
 
-        // Set playback speed to 1x by default
-        document.addEventListener("DOMContentLoaded", function () {
+            // Click the first speed button by default
             document.querySelector('.speedlinks').click();
+
+            // Video play/pause toggle functionality
+            document.querySelectorAll('video').forEach(function(video) {
+                video.addEventListener('click', function() {
+                    // Toggle play/pause on click
+                    if (video.paused || video.ended) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+        // Toggle fullscreen on double-click
+        video.addEventListener('dblclick', function() {
+            if (!document.fullscreenElement) {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
         });
+    });
+});
 
     </script>
 
