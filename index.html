@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>RSPPHD - Spatial Selectivity</title>
     <style>
@@ -21,7 +20,6 @@
             font-size: 25px;
             font-weight: 600;
             white-space: nowrap;
-            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .tab {
@@ -32,88 +30,51 @@
             white-space: nowrap;
         }
 
-        .speed {
+        .controls {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: none;
+        }
+
+        :fullscreen .controls {
             display: flex;
-            background-color: #444;
-            border-radius: 15px;
-            margin-top: 10px;
-            white-space: nowrap;
         }
 
         .button {
             background-color: inherit;
-            border-style: none;
+            border: none;
             cursor: pointer;
-            padding: 15px 24px;
-            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            font-size: 20px;
-            font-weight: 600;
-            border-radius: 15px;
-            color: #202020;
-        }
-
-        .button:hover {
-            background-color: #555555;
-            color: #999;
-            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .button.active {
-            background-color: #777;
-            color: #eee;
-        }
-
-        .tabcontent {
-            display: none;
-            padding: 5px;
-            width: 95%;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            border-radius: 10px;
         }
 
         video {
             width: 100%;
             max-width: 100vw;
-            height: 100%;
+            height: auto;
             max-height: 70vh;
-            display: flex;
-            border-radius: 15px;
+            display: block;
+            border-radius: 10px;
             overflow: hidden;
-            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
             cursor: pointer;
         }
 
-        /* Responsive adjustments for smaller screens, if needed */
         @media screen and (max-width: 800px) {
-
-            .video-container,
-            video {
-                width: 100%;
-                max-width: 100vw;
-                max-height: 70vh;
-                border-radius: 10px;
-            }
-
             .button {
-                padding: 10px 17px;
-                font-size: 15px;
-                border-radius: 10px;
+                padding: 8px 16px;
+                font-size: 14px;
             }
-
             .title {
                 font-size: 20px;
             }
-
-            .tab {
-                border-radius: 10px;
-            }
-
-            .speed {
-                border-radius: 10px;
-            }
         }
-
     </style>
 </head>
-
 <body>
     <h1 class="title">RSPPHD - Spatial Selectivity</h1>
 
@@ -123,120 +84,76 @@
         <button class="tablinks button" onclick="openVideo(event, 'Video3')">Lateral Target</button>
     </div>
 
-
     <div id="Video1" class="tabcontent">
-        <video controls loop muted playsinline>
+        <video loop muted playsinline>
             <source src="Cloud_1200.mp4" type="video/mp4">
-            Your browser does not support the video tag.
         </video>
     </div>
-
     <div id="Video2" class="tabcontent">
-        <video controls loop muted playsinline>
+        <video loop muted playsinline>
             <source src="Central_1200.mp4" type="video/mp4">
-            Your browser does not support the video tag.
         </video>
     </div>
-
     <div id="Video3" class="tabcontent">
-        <video controls loop muted playsinline>
+        <video loop muted playsinline>
             <source src="Lateral_1200.mp4" type="video/mp4">
-            Your browser does not support the video tag.
         </video>
     </div>
 
-    <div class="speed">
-        <button class="speedlinks button" onclick="setSpeed(1, event)">full speed</button>
-        <button class="speedlinks button" onclick="setSpeed(0.1, event)">0.1x speed</button>
+    <div class="controls">
+        <button class="button" onclick="togglePlay()">Play/Pause</button>
+        <button class="button" onclick="toggleFullscreen()">Fullscreen</button>
     </div>
 
     <script>
-        // Open the video tab
         function openVideo(evt, videoName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
+            var tabcontent = document.getElementsByClassName("tabcontent");
+            for (var i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
                 tabcontent[i].querySelector("video").pause();
             }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
+            var tablinks = document.getElementsByClassName("tablinks");
+            for (var i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-            document.getElementById(videoName).style.display = "flex";
+            document.getElementById(videoName).style.display = "block";
             evt.currentTarget.className += " active";
-            document.getElementById(videoName).querySelector("video").play(); // Autoplay the video in the active tab
         }
 
-        // Change tab on swipe
-        function changeTab(direction) {
-            var tabs = Array.from(document.getElementsByClassName('tablinks'));
-            var activeTab = tabs.findIndex(tab => tab.className.includes('active'));
-            if (direction === 'next' && activeTab < tabs.length - 1) {
-                tabs[activeTab + 1].click();
-            } else if (direction === 'prev' && activeTab > 0) {
-                tabs[activeTab - 1].click();
+        function togglePlay() {
+            var video = document.querySelector('.tabcontent[style*="display: block"] video');
+            if (video.paused || video.ended) {
+                video.play();
+            } else {
+                video.pause();
             }
         }
 
-        // Set playback speed
-        function setSpeed(speed) {
-            var i, speedlinks, tabcontent, video;
-            speedlinks = document.getElementsByClassName("speedlinks");
-            tabcontent = document.getElementsByClassName("tabcontent");
-
-            // Remove active class from all speed buttons
-            for (i = 0; i < speedlinks.length; i++) {
-                speedlinks[i].className = speedlinks[i].className.replace(" active", "");
-            }
-
-            // Add active class to the clicked speed button
-            event.currentTarget.className += " active";
-
-            // Set the playback speed for the currently visible video
-            for (i = 0; i < tabcontent.length; i++) {
-                if (tabcontent[i].style.display === "flex") {
-                    video = tabcontent[i].querySelector("video");
-                    video.playbackRate = speed;
+        function toggleFullscreen() {
+            var videoContainer = document.querySelector('.tabcontent[style*="display: block"]');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (videoContainer.requestFullscreen) {
+                    videoContainer.requestFullscreen();
+                } else if (videoContainer.webkitRequestFullscreen) {
+                    videoContainer.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
                 }
             }
         }
 
-        // Add event listeners for touch events
-        document.addEventListener('DOMContentLoaded', function () {
-            var touchstartX = 0;
-            var touchendX = 0;
-
-            const slider = document.querySelector('body'); // Change this selector to your swipeable area
-
-            function handleGesture() {
-                if (touchendX + 100 < touchstartX) {
-                    changeTab('next');
-                }
-
-                if (touchendX - 100 > touchstartX) {
-                    changeTab('prev');
-                }
-            }
-
-            slider.addEventListener('touchstart', function (event) {
-                touchstartX = event.changedTouches[0].screenX;
-            }, false);
-
-            slider.addEventListener('touchend', function (event) {
-                touchendX = event.changedTouches[0].screenX;
-                handleGesture();
-            }, false);
-
-            // Open the first tab by default
-            document.querySelector('.tablinks').click();
-
-            // Set playback speed to 1x by default
-            document.querySelector('.speedlinks').click();
+        document.querySelectorAll('video').forEach(video => {
+            video.addEventListener('click', function() {
+                const controls = document.querySelector('.controls');
+                controls.style.display = 'flex';
+                clearTimeout(video.timeout);
+                video.timeout = setTimeout(() => controls.style.display = 'none', 3000);
+            });
         });
-
     </script>
-
 </body>
-
 </html>
