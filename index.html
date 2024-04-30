@@ -168,23 +168,6 @@
             document.getElementById(videoName).querySelector("video").play(); // Autoplay the video in the active tab
         }
 
-        function toggleFullScreen(action) {
-            const activeVideo = document.querySelector('.tabcontent[style*="display: flex"] video');
-            if (!activeVideo) return; // No active video is displayed
-            
-            const isFullScreen = document.fullscreenElement === activeVideo;
-          
-            if (action === 'enter' && !isFullScreen) {
-              if (activeVideo.requestFullscreen) {
-                activeVideo.requestFullscreen();
-              }
-            } else if (action === 'exit' && isFullScreen) {
-              if (document.exitFullscreen) {
-                document.exitFullscreen();
-              }
-            }
-          }
-
         // Change tab on swipe
         function changeTab(direction) {
             var tabs = Array.from(document.getElementsByClassName('tablinks'));
@@ -223,12 +206,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             var touchstartX = 0;
             var touchendX = 0;
-            var touchstartY = 0;
-            var touchendY = 0;
 
             const slider = document.querySelector('body'); // Change this selector to your swipeable area
 
-            function handleGestureX() {
+            function handleGesture() {
                 if (touchendX + 100 < touchstartX) {
                     changeTab('next');
                 }
@@ -237,26 +218,14 @@
                     changeTab('prev');
                 }
             }
-            function handleGestureY() {
-                if (touchendY + 100 < touchstartY) {
-                    toggleFullScreen('enter');
-                }
-
-                if (touchendY - 100 > touchstartY) {
-                    toggleFullScreen('exit');
-                }
-            }
 
             slider.addEventListener('touchstart', function (event) {
                 touchstartX = event.changedTouches[0].screenX;
-                touchstartY = event.changedTouches[0].screenY;
             }, false);
 
             slider.addEventListener('touchend', function (event) {
                 touchendX = event.changedTouches[0].screenX;
-                touchendY = event.changedTouches[0].screenX;
-                handleGestureX();
-                handleGestureY();
+                handleGesture();
             }, false);
 
             // Open the first tab by default
